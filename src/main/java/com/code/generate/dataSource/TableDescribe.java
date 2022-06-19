@@ -13,16 +13,36 @@ public  class TableDescribe {
     /**
      * 字段名 。
      */
-    private String columnName;
+    private String  columnName;
+
+    /**
+     * 驼峰转换  首位大写 。
+     */
+    private String  underLineAndUpperCase;
+
+    /**
+     * 驼峰转换 。
+     */
+    private String  underLineColumnName;
+
+    /**
+     * 原始字段名 。
+     */
+    private String  originColumnName;
+
+    /**
+     * 数据库主键 。
+     */
+    private boolean primaryKey ;
 
     /**
      * 类型 。
      */
-    private String type;
+    private String  type;
 
     /**
      * 描述 。
      */
-    private String remakes;
+    private String  remakes;
 
 }

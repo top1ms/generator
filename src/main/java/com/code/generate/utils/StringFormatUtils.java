@@ -15,8 +15,8 @@ public abstract class StringFormatUtils {
      * @create : 2022/6/12
      * @desc : 驼峰转换
      */
-    public static String replaceUnderLineAndUpperCase(String str){
-        StringBuffer sb = new StringBuffer();
+    public static String replaceUnderLine(String str){
+        StringBuilder sb = new StringBuilder();
         sb.append(str);
         int count = sb.indexOf("_");
         while(count!=0){
@@ -28,8 +28,33 @@ public abstract class StringFormatUtils {
                 sb.replace(count , count + 1,ia + "");
             }
         }
-        String result = sb.toString().replaceAll("_","");
-        return StringUtils.capitalize(result);
+        return sb.toString().replaceAll("_","");
+    }
+
+    /**
+     * @author : zms
+     * @create : 2022/6/19
+     * @desc : 首位字母大写
+     */
+    public static String upperCaseByFirst(String str) {
+        if (org.apache.commons.lang.StringUtils.isBlank(str)) {
+            return str;
+        }
+        return StringUtils.capitalize(str);
+    }
+
+    /**
+     * @author : zms
+     * @create : 2022/6/19
+     * @desc : 转换驼峰 + 首字母大写
+     */
+    public static String replaceUnderLineAndUpperCase(String str) {
+        return upperCaseByFirst(replaceUnderLine(str));
+    }
+
+    public static void main(String[] args) {
+        String user_info = replaceUnderLine("user_info");
+        System.out.println(user_info);
     }
 
 }

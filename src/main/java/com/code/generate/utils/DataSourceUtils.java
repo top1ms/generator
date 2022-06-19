@@ -74,10 +74,10 @@ public abstract class DataSourceUtils {
             return Collections.emptyList();
         }
         return tableNameList
-                .stream()
-                .map(DataSourceUtils::getResultSetByTableName)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                    .stream()
+                    .map(DataSourceUtils::getResultSetByTableName)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
     }
 
 
@@ -105,14 +105,19 @@ public abstract class DataSourceUtils {
         }
         List<TableDescribe> tableDescribes = new ArrayList<>();
         while (resultSet.next()) {
-            String columnName = StringFormatUtils.replaceUnderLineAndUpperCase(resultSet.getString(TableDescribeConstants.COLUMN_NAME));
+
+            String originColumnName = resultSet.getString(TableDescribeConstants.COLUMN_NAME);
+            String underLineColumnName = StringFormatUtils.replaceUnderLine(originColumnName);
             String type = resultSet.getString(TableDescribeConstants.TYPE);
             String remakes = resultSet.getString(TableDescribeConstants.REMARKS);
 
             TableDescribe tableDescribe = new TableDescribe();
-            tableDescribe.setColumnName(columnName);
+
+            tableDescribe.setOriginColumnName(originColumnName);
+            tableDescribe.setUnderLineColumnName(underLineColumnName);
             tableDescribe.setType(type);
             tableDescribe.setRemakes(remakes);
+            tableDescribe.setPrimaryKey("id".equals(underLineColumnName));
 
             tableDescribes.add(tableDescribe);
         }
@@ -124,7 +129,7 @@ public abstract class DataSourceUtils {
         List<TableDescribe> tableDescribes = fillTableDescribe("user_info");
         System.out.println(JSONObject.toJSON(tableDescribes));
 
-        System.out.println(StringFormatUtils.replaceUnderLineAndUpperCase("id"));
+        System.out.println(StringFormatUtils.replaceUnderLine("id"));
 
     }
 }
