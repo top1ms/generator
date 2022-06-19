@@ -36,6 +36,11 @@ public class GenerateTest {
     public void testGenerateService() throws Exception {
         TemplateGenerateUtils.generateServiceByTemplate("user_info","用户信息");
     }
+
+    @Test
+    public void testGenerateServiceImpl() throws Exception {
+        TemplateGenerateUtils.generateServiceImplByTemplate("user_info","用户信息");
+    }
     @Test
     public void testGenerateQueryCondition() throws Exception {
         TemplateGenerateUtils.generateQueryConditionByTemplates("user_info","用户信息");

@@ -69,6 +69,11 @@ public abstract class GenerateConfigUtils {
     private final static String SERVICE_PACKAGE_PREFIX = "com.code.generate.services";
 
     /**
+     * serviceImpl 包路径前缀
+     */
+    private final static String SERVICE_IMPL_PACKAGE_PREFIX = "com.code.generate.services.impl";
+
+    /**
      * java 类型后缀
      */
     private final static String JAVA_SUFFIX = ".java";
@@ -117,6 +122,7 @@ public abstract class GenerateConfigUtils {
         config.setDaoImplPackagePrefixPath(DAO_IMPL_PACKAGE_PREFIX);
 
         config.setServicePackagePrefixPath(SERVICE_PACKAGE_PREFIX);
+        config.setServiceImplPackagePrefixPath(SERVICE_IMPL_PACKAGE_PREFIX);
 
         config.setDoName(tableUnderLinNameUpperCase + "DO");
         config.setDtoName(tableUnderLinNameUpperCase + "DTO");
@@ -129,6 +135,8 @@ public abstract class GenerateConfigUtils {
 
         config.setServiceName(tableUnderLinNameUpperCase + "Service");
 
+        config.setServiceImplName(tableUnderLinNameUpperCase + "ServiceImpl");
+
 
         config.setDoPackagePath(format(DO_PACKAGE_PREFIX, tableUnderLinNameUpperCase) + "DO");
         config.setDtoPackagePath(format(DTO_PACKAGE_PREFIX, tableUnderLinNameUpperCase) + "DTO");
@@ -139,6 +147,10 @@ public abstract class GenerateConfigUtils {
 
         config.setDaoPackagePath(format(DAO_PACKAGE_PREFIX, tableUnderLinNameUpperCase) + "Dao");
         config.setDaoImplPackagePath(format(DAO_IMPL_PACKAGE_PREFIX, tableUnderLinNameUpperCase) + "DaoImpl");
+
+        config.setServicePackagePath(format(SERVICE_PACKAGE_PREFIX, tableUnderLinNameUpperCase) + "Service");
+        config.setServiceImplPackagePath(format(SERVICE_IMPL_PACKAGE_PREFIX, tableUnderLinNameUpperCase) + "ServiceImpl");
+
 
         config.setDaoMapperName(tableUnderLinNameUpperCase + "Mapper");
         return config;

@@ -58,6 +58,11 @@ public abstract class TemplateGenerateUtils {
     private final static String SERVICE_OUT_PATH_PREFIX = "/Users/top1ms/IdeaProjects/generator/src/main/java/com/code/generate/services/";
 
     /**
+     * serviceImpl 输出路径前缀
+     */
+    private final static String SERVICE_IMPL_OUT_PATH_PREFIX = "/Users/top1ms/IdeaProjects/generator/src/main/java/com/code/generate/services/impl/";
+
+    /**
      * dto 包路径前缀
      */
     private final static String DTO_PACKAGE_PREFIX = "com.code.generate.beans.dto";
@@ -193,6 +198,27 @@ public abstract class TemplateGenerateUtils {
 
 
         generateFileByTemplate("service.FTL", fileName, parameters);
+    }
+
+    /**
+     * @author : zms
+     * @create : 2022/6/19
+     * @desc : 生成 ServiceImpl
+     */
+    public static void generateServiceImplByTemplate(String tableName, String desc) throws Exception {
+
+        Map<String, Object> parameters = fillParametersFromJdbcByTableName(tableName);
+
+        GenerateConfig generateConfig = GenerateConfigUtils.generateConfig(tableName);
+
+        parameters.put("desc",desc);
+
+        fillParametersFromGenerateConfig(parameters, generateConfig);
+
+        String fileName = absolutePath(SERVICE_IMPL_OUT_PATH_PREFIX, generateConfig.getServiceImplName(), JAVA_SUFFIX);
+
+
+        generateFileByTemplate("serviceImpl.FTL", fileName, parameters);
     }
 
     /**

@@ -6,4 +6,6 @@ import java.io.Serializable;
 
 @Data
 public class UserInfoSaveParam implements Serializable {
+
+    private Long id;
 }
