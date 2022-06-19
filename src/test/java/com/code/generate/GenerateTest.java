@@ -21,4 +21,19 @@ public class GenerateTest {
     public void testGenerateDO(){
         TemplateGenerateUtils.generateDOByTemplate("user_info","用户信息");
     }
+
+    @Test
+    public void testGenerateDao() throws Exception {
+        TemplateGenerateUtils.generateDAOByTemplate("user_info","用户信息");
+    }
+
+    @Test
+    public void testGenerateDaoImpl() throws Exception {
+        TemplateGenerateUtils.generateDaoImplByTemplate("user_info","用户信息");
+    }
+
+    @Test
+    public void testGenerateQueryCondition() throws Exception {
+        TemplateGenerateUtils.generateQueryConditionByTemplates("user_info","用户信息");
+    }
 }
