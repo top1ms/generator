@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserInfoMapper">
+    <resultMap id="BaseResultMap" type="com.code.generate.beans.po.UserInfoDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="user_id"       jdbcType="BIGINT"     property="userId"/>
+        <result column="name"          jdbcType="VARCHAR"    property="name"/>
+        <result column="status"        jdbcType="TINYINT"    property="status"/>
+        <result column="gmt_create"    jdbcType="TIMESTAMP"  property="gmtCreate"/>
+        <result column="gmt_modify"    jdbcType="TIMESTAMP"  property="gmtModify"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+        user_id,
+        name,
+        status,
+        gmt_modify,
+        gmt_create
+    </sql>
+
+    <insert id="insert"
+            parameterType="com.code.generate.beans.po.UserInfoDO"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO user_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="name != null">name,</if>
+            <if test="status != null">status</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="name != null">#{name},</if>
+            <if test="status != null">#{status}</if>
+        </trim>
+    </insert>
+
+
+</mapper>

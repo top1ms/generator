@@ -63,6 +63,6 @@ public class UserInfoDaoImpl implements UserInfoDao {
         if (Objects.isNull(condition)) {
             return Collections.emptyList();
         }
-        return sqlSessionTemplate.selectList("UserInfoMapper.queryByCondition", condition);
+        return sqlSessionTemplate.selectList("UserInfoMapperTemplate.queryByCondition", condition);
     }
 }
