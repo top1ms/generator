@@ -4,7 +4,7 @@ package ${daoImplPackagePrefixPath};
 import ${doPackagePath};
 import ${queryParamPackagePath};
 import ${daoPackagePath};
-import ${pageUtilsPackagePrefixPath}.PageUtil;
+import ${pageUtilsPackagePrefixPath}.PageUtils;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
@@ -81,7 +81,7 @@ public class ${daoImplName} implements ${daoName} {
         }
         if (Objects.nonNull(param.getPageNo()) && Objects.nonNull(param.getPageSize())) {
             param.setOffSet(param.getPageSize());
-            param.setStartRow(PageUtil.getStartRow(param.getPageNo(), param.getPageSize()));
+            param.setStartRow(PageUtils.getStartRow(param.getPageNo(), param.getPageSize()));
         }
         return sqlSessionTemplate.selectList("${mapperName}.queryByParam", param);
     }
