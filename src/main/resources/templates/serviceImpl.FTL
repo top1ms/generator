@@ -1,10 +1,10 @@
 package ${serviceImplPackagePrefixPath};
 
 import ${dtoPackagePath};
-import ${queryParamPackagePath};
+import ${queryConditionPackagePath};
 import ${saveParamPackagePath};
 import ${doPackagePath};
-import ${queryConditionPackagePath};
+import ${queryParamPackagePath};
 import ${daoPackagePath};
 import ${servicePackagePath};
 import org.springframework.beans.BeanUtils;
@@ -29,36 +29,40 @@ public class ${serviceImplName} implements ${serviceName} {
     private ${daoName} ${daoName?uncap_first};
 
     @Override
-    public boolean insert(${saveParamName} ${saveParamName?uncap_first}) {
-        if (Objects.isNull(${saveParamName?uncap_first})) {
+    public boolean insert(${saveParamName} param) {
+        if (Objects.isNull(param)) {
             return false;
         }
-        ${doName} ${doName?uncap_first} = transferDO(${saveParamName?uncap_first});
+        ${doName} ${doName?uncap_first} = transferDO(param);
         return ${daoName?uncap_first}.insert(${doName?uncap_first}) > 0;
     }
 
     @Override
-    public boolean edit(${saveParamName} ${saveParamName?uncap_first}) {
-        if (Objects.isNull(${saveParamName?uncap_first}) || Objects.isNull(${saveParamName?uncap_first}.getId())) {
+    public boolean edit(${saveParamName} param) {
+        if (Objects.isNull(param) || Objects.isNull(param.getId())) {
             return false;
         }
-        ${doName} ${doName?uncap_first} = transferDO(${saveParamName?uncap_first});
+        ${doName} ${doName?uncap_first} = transferDO(param);
         return ${daoName?uncap_first}.updateByPrimaryKey(${doName?uncap_first}) > 0;
     }
 
     @Override
-    public ${dtoName} queryExactlyOneByCondition(${queryParamName} ${queryParamName?uncap_first}) {
-        List<${dtoName}> result = queryByCondition(${queryParamName?uncap_first});
-        if (CollectionUtils.isEmpty(result)) {
+    public ${dtoName} queryExactlyOneByCondition(${queryConditionName} condition) {
+        if(Objects.isNull(condition)){
             return null;
         }
-        return result.get(0);
+        ${queryParamName} param = transferQueryParam(condition);
+        ${doName} ${doName?uncap_first} = ${daoName?uncap_first}.queryExactlyOneByParam(param);
+        if(Objects.isNull(${doName?uncap_first})){
+            return null;
+        }
+        return transferDTO(${doName?uncap_first});
     }
 
     @Override
-    public List<${dtoName}> queryByCondition(${queryParamName} ${queryParamName?uncap_first}) {
-        ${queryConditionName} ${queryConditionName?uncap_first} = transferQueryCondition(${queryParamName?uncap_first});
-        List<${doName}> result = ${daoName?uncap_first}.queryByCondition(${queryConditionName?uncap_first});
+    public List<${dtoName}> queryByCondition(${queryConditionName} condition) {
+        ${queryParamName} param = transferQueryParam(condition);
+        List<${doName}> result = ${daoName?uncap_first}.queryByParam(param);
         if (CollectionUtils.isEmpty(result)) {
             return null;
         }
@@ -67,26 +71,32 @@ public class ${serviceImplName} implements ${serviceName} {
                      .collect(Collectors.toList());
     }
 
+    @Override
+    public int count(${queryConditionName} condition) {
+        ${queryParamName} param = transferQueryParam(condition);
+        return ${daoName?uncap_first}.count(param);
+    }
+
     /**
      * @author : zms
      * @create : 2022/6/19
      * @desc : 转换为 DO
      */
-    private ${doName} transferDO(${saveParamName} ${saveParamName?uncap_first}) {
+    private ${doName} transferDO(${saveParamName} param) {
         ${doName} ${doName?uncap_first} = new ${doName}();
-        BeanUtils.copyProperties(${saveParamName?uncap_first}, ${doName?uncap_first});
+        BeanUtils.copyProperties(param, ${doName?uncap_first});
         return ${doName?uncap_first};
     }
 
     /**
      * @author : zms
      * @create : 2022/6/19
-     * @desc : 转换为 QueryCondition
+     * @desc : 转换为 QueryParam
      */
-    private ${queryConditionName} transferQueryCondition(${queryParamName} ${queryParamName?uncap_first}) {
-        ${queryConditionName} ${queryConditionName?uncap_first} = new ${queryConditionName}();
-        BeanUtils.copyProperties(${queryParamName?uncap_first}, ${queryConditionName?uncap_first});
-        return ${queryConditionName?uncap_first};
+    private ${queryParamName} transferQueryParam(${queryConditionName} condition) {
+        ${queryParamName} param = new ${queryParamName}();
+        BeanUtils.copyProperties(condition, param);
+        return param;
     }
 
     /**

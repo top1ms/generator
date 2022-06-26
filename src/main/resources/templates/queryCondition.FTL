@@ -4,6 +4,7 @@ package ${queryConditionPackagePrefixPath};
 import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
+import ${basePageQueryPackagePrefixPath}.BasePageQuery;
 
 /**
  * @author : zms
@@ -11,7 +12,7 @@ import java.util.Date;
  * @desc : ${desc}
  */
 @Data
-public class ${queryConditionName} implements Serializable {
+public class ${queryConditionName} extends BasePageQuery implements Serializable {
 
 
 

@@ -1,17 +1,13 @@
 package com.code.generate.template;
 
-import com.alibaba.fastjson.JSONObject;
-import freemarker.template.SimpleScalar;
-import freemarker.template.TemplateMethodModelEx;
-import freemarker.template.TemplateModelException;
+import java.util.*;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
-import javax.xml.transform.sax.TemplatesHandler;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import freemarker.template.SimpleScalar;
+import freemarker.template.TemplateMethodModelEx;
+import freemarker.template.TemplateModelException;
 
 /**
  * @author : zms
@@ -20,9 +16,17 @@ import java.util.Map;
  */
 public class TypeConvert implements TemplateMethodModelEx {
 
-    private final static Map<String, String> typeMapping = new HashMap<>();
+    public final static Map<String, String> typeMapping = new HashMap<>();
 
-    private final static String DEFAULT = "String";
+    public final static Set<String>         integerSet  = new HashSet<>();
+
+    public final static Set<String>         longSet     = new HashSet<>();
+
+    public final static Set<String>         strSet      = new HashSet<>();
+
+    public final static Set<String>         dateSet     = new HashSet<>();
+
+    private final static String             DEFAULT     = "String";
 
     static {
         typeMapping.put("VARCHAR", "String");
@@ -31,10 +35,28 @@ public class TypeConvert implements TemplateMethodModelEx {
 
         typeMapping.put("TIMESTAMP", "Date");
 
-
         typeMapping.put("TINYINT", "Integer");
         typeMapping.put("INTEGER", "Integer");
+        typeMapping.put("INT", "Integer");
+
         typeMapping.put("BIGINT", "Long");
+        typeMapping.put("BIGINT UNSIGNED", "Long");
+
+        strSet.add("VARCHAR");
+        strSet.add("TEXT");
+        strSet.add("JSON");
+
+        dateSet.add("TIMESTAMP");
+
+        integerSet.add("TINYINT");
+        integerSet.add("INT");
+        integerSet.add("INTEGER");
+
+        longSet.add("BIGINT");
+        longSet.add("BIGINT UNSIGNED");
+
+
+
 
     }
 
@@ -54,7 +76,6 @@ public class TypeConvert implements TemplateMethodModelEx {
         }
         return result;
     }
-
 
     @Override
     public String exec(List list) throws TemplateModelException {

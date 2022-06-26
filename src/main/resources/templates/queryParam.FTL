@@ -1,8 +1,9 @@
-package ${packagePrefix};
+package ${queryParamPackagePrefixPath};
 
 
 import lombok.Data;
-import java.io.Serializable;
+import java.util.Date;
+import ${basePageQueryPackagePrefixPath}.BasePageQuery;
 
 /**
  * @author : zms
@@ -10,7 +11,7 @@ import java.io.Serializable;
  * @desc : ${desc} QueryParam
  */
 @Data
-public class ${javaFileName} implements Serializable {
+public class ${queryParamName} extends BasePageQuery {
 
 
 

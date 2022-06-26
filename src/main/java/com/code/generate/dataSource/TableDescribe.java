@@ -8,7 +8,7 @@ import lombok.Data;
  * @desc : 表描述
  */
 @Data
-public  class TableDescribe {
+public class TableDescribe {
 
     /**
      * 字段名 。
@@ -33,7 +33,27 @@ public  class TableDescribe {
     /**
      * 数据库主键 。
      */
-    private boolean primaryKey ;
+    private boolean primaryKey;
+
+    /**
+     * 字符串
+     */
+    private boolean needString;
+
+    /**
+     * 整数
+     */
+    private boolean needInteger;
+
+    /**
+     * 时间
+     */
+    private boolean needDate;
+
+    /**
+     * 大数
+     */
+    private boolean needLong;
 
     /**
      * 类型 。

@@ -1,20 +1,24 @@
 package com.code.generate.utils;
 
-import com.alibaba.fastjson.JSONObject;
-import com.code.generate.config.GenerateConfig;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.code.generate.template.MockTestParam;
+import org.apache.commons.lang.StringUtils;
+
 import com.code.generate.dataSource.TableDescribe;
 import com.code.generate.dataSource.TableDescribeConstants;
 import com.code.generate.template.TypeConvert;
+
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
 import lombok.SneakyThrows;
-import org.apache.commons.lang.StringUtils;
-
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
 
 /**
  * @author : zms
@@ -24,74 +28,72 @@ import java.util.*;
 @SuppressWarnings("DuplicatedCode")
 public abstract class TemplateGenerateUtils {
 
-    private final static Configuration configuration = new Configuration();
+    private final static Configuration configuration                    = new Configuration();
 
     /**
-     * mapper.xml 输出路径前缀
+     * do 模版
      */
-    private final static String MAPPER_XML_OUT_PATH_PREFIX = "/Users/top1ms/IdeaProjects/generator/src/main/resources/mapper/";
+    private final static String        DO_TEMPLATE_NAME                 = "do.FTL";
 
     /**
-     * dto 输出路径前缀
+     * dto 模版
      */
-    private final static String DTO_OUT_PATH_PREFIX = "/Users/top1ms/IdeaProjects/generator/src/main/java/com/code/generate/beans/dto/";
+    private final static String        DTO_TEMPLATE_NAME                = "dto.FTL";
 
     /**
-     * po 输出路径前缀
+     * saveParam 模版
      */
-    private final static String DO_OUT_PATH_PREFIX = "/Users/top1ms/IdeaProjects/generator/src/main/java/com/code/generate/beans/po/";
+    private final static String        SAVE_PARAM_TEMPLATE_NAME         = "saveParam.FTL";
 
     /**
-     * dao 输出路径前缀
+     * queryParam 模版
      */
-    private final static String DAO_OUT_PATH_PREFIX = "/Users/top1ms/IdeaProjects/generator/src/main/java/com/code/generate/dao/";
-
+    private final static String        QUERY_PARAM_TEMPLATE_NAME        = "queryParam.FTL";
 
     /**
-     * daoImpl 输出路径前缀
+     * queryCondition 模版
      */
-    private final static String DAO_IMPL_OUT_PATH_PREFIX = "/Users/top1ms/IdeaProjects/generator/src/main/java/com/code/generate/dao/impl/";
+    private final static String        QUERY_CONDITION_TEMPLATE_NAME    = "queryCondition.FTL";
 
     /**
-     * service 输出路径前缀
+     * mapper 模版
      */
-    private final static String SERVICE_OUT_PATH_PREFIX = "/Users/top1ms/IdeaProjects/generator/src/main/java/com/code/generate/services/";
+    private final static String        MAPPER_TEMPLATE_NAME             = "mapper.FTL";
 
     /**
-     * serviceImpl 输出路径前缀
+     * dao 模版
      */
-    private final static String SERVICE_IMPL_OUT_PATH_PREFIX = "/Users/top1ms/IdeaProjects/generator/src/main/java/com/code/generate/services/impl/";
+    private final static String        DAO_TEMPLATE_NAME                = "dao.FTL";
 
     /**
-     * dto 包路径前缀
+     * daoImpl 模版
      */
-    private final static String DTO_PACKAGE_PREFIX = "com.code.generate.beans.dto";
+    private final static String        DAO_IMPL_TEMPLATE_NAME           = "daoImpl.FTL";
 
     /**
-     * po 包路径前缀
+     * service 模版
      */
-    private final static String DO_PACKAGE_PREFIX = "com.code.generate.beans.po";
+    private final static String        SERVICE_TEMPLATE_NAME            = "service.FTL";
 
     /**
-     * dao 包路径前缀
+     * serviceImpl 模版
      */
-    private final static String DAO_PACKAGE_PREFIX = "com.code.generate.dao";
+    private final static String        SERVICE_IMPL_TEMPLATE_NAME       = "serviceImpl.FTL";
 
     /**
-     * daoImpl 包路径前缀
+     * facedManager 模版
      */
-    private final static String DAO_IMPL_PACKAGE_PREFIX = "com.code.generate.dao.impl";
+    private final static String        FACED_MANAGER_TEMPLATE_NAME      = "facedManager.FTL";
 
     /**
-     * java 类型后缀
+     * facedManagerImpl 模版
      */
-    private final static String JAVA_SUFFIX = ".java";
+    private final static String        FACED_MANAGER_IMPL_TEMPLATE_NAME = "facedManagerImpl.FTL";
 
     /**
-     * xml 路径后缀
+     * facedManagerTest 模版
      */
-    private final static String MAPPER_XML_OUT_PATH_SUFFIX = ".xml";
-
+    private final static String        FACED_MANAGER_TEST_TEMPLATE_NAME = "facedManagerTest.FTL";
 
     static {
         //这里比较重要，用来指定加载模板所在的路径
@@ -104,9 +106,15 @@ public abstract class TemplateGenerateUtils {
         return configuration.getTemplate(templateName);
     }
 
+
+
+
+
     @SneakyThrows
-    public static void generateFileByTemplate(String templateName, String outPath, Map<String, Object> parameters) {
+    public static void generateFileByTemplate(String templateName, Map<String, Object> parameters) {
         Template template = getTemplate(templateName);
+        String outPath = (String) parameters.get(templateName);
+
         File file = createOrGetOutFile(outPath);
 
         FileOutputStream fos = new FileOutputStream(file);
@@ -114,191 +122,162 @@ public abstract class TemplateGenerateUtils {
         template.process(parameters, out);
     }
 
+
     /**
-     * @author : zms
-     * @create : 2022/6/19
-     * @desc : 生成 mapper.xml
+     * @author zms@didiglobal.com
+     * @desc 生成全部模版
+     * @date 2022/6/23
      */
-    public static void generateMapperXMLByTemplate(String tableName) {
+    public static void  generateAll(String tableName,String desc){
+        generateDOByTemplate(tableName,desc);
+        generateDTOByTemplate(tableName,desc);
+        generateQueryConditionByTemplate(tableName,desc);
+        generateQueryParamByTemplate(tableName,desc);
+        generateSaveParamByTemplate(tableName,desc);
 
-        Map<String, Object> parameters = fillParametersFromJdbcByTableName(tableName);
+        generateDaoByTemplate(tableName,desc);
+        generateDaoImplByTemplate(tableName,desc);
+        generateMapperByTemplate(tableName,desc);
 
-        String mapperXmlName = StringFormatUtils.replaceUnderLineAndUpperCase(tableName) + "MapperTemplate";
-        String fileName = absolutePath(MAPPER_XML_OUT_PATH_PREFIX, mapperXmlName, MAPPER_XML_OUT_PATH_SUFFIX);
+        generateServiceByTemplate(tableName,desc);
+        generateServiceImplByTemplate(tableName,desc);
 
-        String durationSourcePath = DO_PACKAGE_PREFIX + "." + StringFormatUtils.replaceUnderLineAndUpperCase(tableName) + "DO";
+        generateFacedManagerByTemplate(tableName,desc);
+        generateFacedManagerImplByTemplate(tableName,desc);
 
-        String queryByConditionPath = DO_PACKAGE_PREFIX + "." + StringFormatUtils.replaceUnderLineAndUpperCase(tableName) + "QueryCondition";
+        generateFacedManagerTestByTemplate(tableName,desc);
 
-        parameters.put("tableName", tableName);
-        parameters.put("mapperXmlName", mapperXmlName);
-        parameters.put("durationSourcePath", durationSourcePath);
-        parameters.put("queryByConditionPath", queryByConditionPath);
-
-
-        generateFileByTemplate("mapperXml.FTL", fileName, parameters);
     }
-
     /**
-     * @author : zms
-     * @create : 2022/6/19
-     * @desc : 生成 DAO
-     */
-    public static void generateDAOByTemplate(String tableName, String desc) throws Exception {
-
-        Map<String, Object> parameters = fillParametersFromJdbcByTableName(tableName);
-
-        GenerateConfig generateConfig = GenerateConfigUtils.generateConfig(tableName);
-
-        fillParametersFromGenerateConfig(parameters, generateConfig);
-
-        String fileName = absolutePath(DAO_OUT_PATH_PREFIX, generateConfig.getDaoName(), JAVA_SUFFIX);
-
-
-        generateFileByTemplate("mapperDO.FTL", fileName, parameters);
-    }
-
-    /**
-     * @author : zms
-     * @create : 2022/6/19
-     * @desc : 生成 DaoImpl
-     */
-    public static void generateDaoImplByTemplate(String tableName, String desc) throws Exception {
-
-        Map<String, Object> parameters = fillParametersFromJdbcByTableName(tableName);
-
-        GenerateConfig generateConfig = GenerateConfigUtils.generateConfig(tableName);
-
-        parameters.put("desc",desc);
-
-        fillParametersFromGenerateConfig(parameters, generateConfig);
-
-        String fileName = absolutePath(DAO_IMPL_OUT_PATH_PREFIX, generateConfig.getDaoImplName(), JAVA_SUFFIX);
-
-
-        generateFileByTemplate("mapperDOImpl.FTL", fileName, parameters);
-    }
-
-    /**
-     * @author : zms
-     * @create : 2022/6/19
-     * @desc : 生成 Service
-     */
-    public static void generateServiceByTemplate(String tableName, String desc) throws Exception {
-
-        Map<String, Object> parameters = fillParametersFromJdbcByTableName(tableName);
-
-        GenerateConfig generateConfig = GenerateConfigUtils.generateConfig(tableName);
-
-        parameters.put("desc",desc);
-
-        fillParametersFromGenerateConfig(parameters, generateConfig);
-
-        String fileName = absolutePath(SERVICE_OUT_PATH_PREFIX, generateConfig.getServiceName(), JAVA_SUFFIX);
-
-
-        generateFileByTemplate("service.FTL", fileName, parameters);
-    }
-
-    /**
-     * @author : zms
-     * @create : 2022/6/19
-     * @desc : 生成 ServiceImpl
-     */
-    public static void generateServiceImplByTemplate(String tableName, String desc) throws Exception {
-
-        Map<String, Object> parameters = fillParametersFromJdbcByTableName(tableName);
-
-        GenerateConfig generateConfig = GenerateConfigUtils.generateConfig(tableName);
-
-        parameters.put("desc",desc);
-
-        fillParametersFromGenerateConfig(parameters, generateConfig);
-
-        String fileName = absolutePath(SERVICE_IMPL_OUT_PATH_PREFIX, generateConfig.getServiceImplName(), JAVA_SUFFIX);
-
-
-        generateFileByTemplate("serviceImpl.FTL", fileName, parameters);
-    }
-
-    /**
-     * @author : zms
-     * @create : 2022/6/19
-     * @desc : 生成 queryCondition
-     */
-    public static void generateQueryConditionByTemplates(String tableName, String desc) throws Exception {
-        Map<String, Object> parameters = fillParametersFromJdbcByTableName(tableName);
-
-        parameters.put("desc", desc);
-
-        GenerateConfig generateConfig = GenerateConfigUtils.generateConfig(tableName);
-
-        fillParametersFromGenerateConfig(parameters, generateConfig);
-
-        String fileName = absolutePath(DO_OUT_PATH_PREFIX, generateConfig.getQueryConditionName(), JAVA_SUFFIX);
-
-
-        generateFileByTemplate("queryCondition.FTL", fileName, parameters);
-    }
-
-    private static void fillParametersFromGenerateConfig(Map<String, Object> parameters, GenerateConfig config) {
-        JSONObject json = (JSONObject) JSONObject.toJSON(config);
-        Set<Map.Entry<String, Object>> entries = json.entrySet();
-        entries.forEach(entry -> parameters.put(entry.getKey(), entry.getValue()));
-    }
-
-    /**
-     * @author : zms
-     * @create : 2022/6/19
-     * @desc : 生成  DO
+     * @author zms@didiglobal.com
+     * @desc 生成 DO
+     * @date 2022/6/22
      */
     public static void generateDOByTemplate(String tableName, String desc) {
-        String javaName = StringFormatUtils.replaceUnderLineAndUpperCase(tableName) + "DO";
-
-        String fileName = absolutePath(DO_OUT_PATH_PREFIX, javaName, JAVA_SUFFIX);
-
-        Map<String, Object> parameters = buildParameters(tableName, desc, DO_PACKAGE_PREFIX, javaName);
-
-        generateFileByTemplate("do.FTL", fileName, parameters);
-
+        Map<String, Object> parameters = TemplateGenerateUtils.generateParameters(tableName, desc);
+        generateFileByTemplate(DO_TEMPLATE_NAME, parameters);
     }
-
 
     /**
-     * @author : zms
-     * @create : 2022/6/19
-     * @desc : 生成 DTO
+     * @author zms@didiglobal.com
+     * @desc 生成 DTO
+     * @date 2022/6/22
      */
     public static void generateDTOByTemplate(String tableName, String desc) {
-
-        String javaName = StringFormatUtils.replaceUnderLineAndUpperCase(tableName) + "DTO";
-
-        String fileName = absolutePath(DTO_OUT_PATH_PREFIX, javaName, JAVA_SUFFIX);
-
-        Map<String, Object> parameters = buildParameters(tableName, desc, DTO_PACKAGE_PREFIX, javaName);
-
-
-        generateFileByTemplate("dto.FTL", fileName, parameters);
+        Map<String, Object> parameters = TemplateGenerateUtils.generateParameters(tableName, desc);
+        generateFileByTemplate(DTO_TEMPLATE_NAME, parameters);
     }
 
-
-    private static Map<String, Object> buildParameters(String tableName, String desc,
-                                                       String packagePrefix, String javaFileName) {
-        Map<String, Object> parameters = fillParametersFromJdbcByTableName(tableName);
-        parameters.put("desc", desc);
-        parameters.put("packagePrefix", packagePrefix);
-        parameters.put("javaFileName", javaFileName);
-        parameters.put("typeConvert", new TypeConvert());
-        return parameters;
-
+    /**
+     * @author zms@didiglobal.com
+     * @desc 生成 SaveParam
+     * @date 2022/6/22
+     */
+    public static void generateSaveParamByTemplate(String tableName, String desc) {
+        Map<String, Object> parameters = TemplateGenerateUtils.generateParameters(tableName, desc);
+        generateFileByTemplate(SAVE_PARAM_TEMPLATE_NAME, parameters);
     }
 
-    private final static String ABSOLUTE_PATH_FORMAT = "%s%s%s";
-
-    public static String absolutePath(String prefix, String fileName, String suffix) {
-        return String.format(ABSOLUTE_PATH_FORMAT, prefix, fileName, suffix);
+    /**
+     * @author zms@didiglobal.com
+     * @desc 生成 QueryParam
+     * @date 2022/6/22
+     */
+    public static void generateQueryParamByTemplate(String tableName, String desc) {
+        Map<String, Object> parameters = TemplateGenerateUtils.generateParameters(tableName, desc);
+        generateFileByTemplate(QUERY_PARAM_TEMPLATE_NAME, parameters);
     }
 
+    /**
+     * @author zms@didiglobal.com
+     * @desc 生成 QueryCondition
+     * @date 2022/6/22
+     */
+    public static void generateQueryConditionByTemplate(String tableName, String desc) {
+        Map<String, Object> parameters = TemplateGenerateUtils.generateParameters(tableName, desc);
+        generateFileByTemplate(QUERY_CONDITION_TEMPLATE_NAME, parameters);
+    }
+
+    /**
+     * @author zms@didiglobal.com
+     * @desc 生成 mapper
+     * @date 2022/6/22
+     */
+    public static void generateMapperByTemplate(String tableName, String desc) {
+        Map<String, Object> parameters = TemplateGenerateUtils.generateParameters(tableName, desc);
+        generateFileByTemplate(MAPPER_TEMPLATE_NAME, parameters);
+    }
+
+    /**
+     * @author zms@didiglobal.com
+     * @desc 生成 dao
+     * @date 2022/6/22
+     */
+    public static void generateDaoByTemplate(String tableName, String desc) {
+        Map<String, Object> parameters = TemplateGenerateUtils.generateParameters(tableName, desc);
+        generateFileByTemplate(DAO_TEMPLATE_NAME, parameters);
+    }
+
+    /**
+     * @author zms@didiglobal.com
+     * @desc 生成 daoImpl
+     * @date 2022/6/22
+     */
+    public static void generateDaoImplByTemplate(String tableName, String desc) {
+        Map<String, Object> parameters = TemplateGenerateUtils.generateParameters(tableName, desc);
+        generateFileByTemplate(DAO_IMPL_TEMPLATE_NAME, parameters);
+    }
+
+    /**
+     * @author zms@didiglobal.com
+     * @desc 生成 service
+     * @date 2022/6/22
+     */
+    public static void generateServiceByTemplate(String tableName, String desc) {
+        Map<String, Object> parameters = TemplateGenerateUtils.generateParameters(tableName, desc);
+        generateFileByTemplate(SERVICE_TEMPLATE_NAME, parameters);
+    }
+
+    /**
+     * @author zms@didiglobal.com
+     * @desc 生成 serviceImpl
+     * @date 2022/6/22
+     */
+    public static void generateServiceImplByTemplate(String tableName, String desc) {
+        Map<String, Object> parameters = TemplateGenerateUtils.generateParameters(tableName, desc);
+        generateFileByTemplate(SERVICE_IMPL_TEMPLATE_NAME, parameters);
+    }
+
+    /**
+     * @author zms@didiglobal.com
+     * @desc 生成 facedManager
+     * @date 2022/6/22
+     */
+    public static void generateFacedManagerByTemplate(String tableName, String desc) {
+        Map<String, Object> parameters = TemplateGenerateUtils.generateParameters(tableName, desc);
+        generateFileByTemplate(FACED_MANAGER_TEMPLATE_NAME, parameters);
+    }
+
+    /**
+     * @author zms@didiglobal.com
+     * @desc 生成 facedManagerImpl
+     * @date 2022/6/22
+     */
+    public static void generateFacedManagerImplByTemplate(String tableName, String desc) {
+        Map<String, Object> parameters = TemplateGenerateUtils.generateParameters(tableName, desc);
+        generateFileByTemplate(FACED_MANAGER_IMPL_TEMPLATE_NAME, parameters);
+    }
+
+    /**
+     * @author zms@didiglobal.com
+     * @desc 生成 facedManagerTest
+     * @date 2022/6/22
+     */
+    public static void generateFacedManagerTestByTemplate(String tableName, String desc) {
+        Map<String, Object> parameters = TemplateGenerateUtils.generateParameters(tableName, desc);
+        parameters.put("mockTestParam",new MockTestParam());
+        generateFileByTemplate(FACED_MANAGER_TEST_TEMPLATE_NAME, parameters);
+    }
 
     /**
      * @author : zms
@@ -330,4 +309,18 @@ public abstract class TemplateGenerateUtils {
         return file;
     }
 
+    /**
+     * @author zms@didiglobal.com
+     * @desc 生成模版参数
+     * @date 2022/6/22
+     */
+    public static Map<String, Object> generateParameters(String tableName, String desc) {
+        // 模版配置 参数
+        Map<String, Object> templateGenerateConfigParameters = GenerateConfigUtils.templateGenerateConfigMap(tableName,
+            desc);
+        // jdbc 参数
+        Map<String, Object> jdbcParameters = fillParametersFromJdbcByTableName(tableName);
+        templateGenerateConfigParameters.putAll(jdbcParameters);
+        return templateGenerateConfigParameters;
+    }
 }

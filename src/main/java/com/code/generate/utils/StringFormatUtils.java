@@ -53,8 +53,7 @@ public abstract class StringFormatUtils {
     }
 
     public static void main(String[] args) {
-        String user_info = replaceUnderLine("user_info");
-        System.out.println(user_info);
+        System.out.println(upperCaseByFirst("name"));
     }
 
 }

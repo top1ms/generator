@@ -1,7 +1,8 @@
-package ${packagePrefix};
+package ${saveParamPackagePrefixPath};
 
 
 import lombok.Data;
+import java.util.Date;
 import java.io.Serializable;
 
 /**
@@ -10,7 +11,7 @@ import java.io.Serializable;
  * @desc : ${desc} SaveParam
  */
 @Data
-public class ${javaFileName} implements Serializable {
+public class ${saveParamName} implements Serializable {
 
 
 

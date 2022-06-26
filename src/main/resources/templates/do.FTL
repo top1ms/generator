@@ -1,4 +1,4 @@
-package ${packagePrefix};
+package ${doPackagePrefixPath};
 
 
 import lombok.Data;
@@ -10,7 +10,7 @@ import java.util.Date;
  * @desc : ${desc} DO
  */
 @Data
-public class ${javaFileName} {
+public class ${doName} {
 
 
 

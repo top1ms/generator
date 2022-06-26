@@ -1,0 +1,103 @@
+spring:
+  application:
+    name: generator
+  datasource:
+    url: jdbc:mysql://localhost:3306/warehouse?characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  mapperLocations: classpath:/mapper/*.xml
+
+server:
+  port: 8080
+
+package:
+  prefix: com.code.generate
+
+#packagePath 全路径限定名 com.code.generate.do.UerInfoDO
+#packagePrefixPath 包路径前缀 com.code.generate.do
+#diskPath /Users/top1ms/IdeaProjects/generator/src/main/java/com/code/generate/beans/dto/UserInfoDTO.java
+
+template:
+  mapperSuffix: mapper
+  mapperOutputPrefixPath: /Users/top1ms/IdeaProjects/generator/src/main/resources/mapper/
+  templateConfigMap:
+    do:
+      packagePrefixPath: com.code.generate.beans.po
+      classNameSuffix: DO
+      diskPrefixPath: /Users/top1ms/IdeaProjects/generator/src/main/java/com/code/generate/beans/po/
+      fileSuffix: .java
+    dto:
+      packagePrefixPath: com.code.generate.beans.dto
+      classNameSuffix: DTO
+      diskPrefixPath: /Users/top1ms/IdeaProjects/generator/src/main/java/com/code/generate/beans/dto/
+      fileSuffix: .java
+    saveParam:
+      packagePrefixPath: com.code.generate.beans.dto
+      classNameSuffix: SaveParam
+      diskPrefixPath: /Users/top1ms/IdeaProjects/generator/src/main/java/com/code/generate/beans/dto/
+      fileSuffix: .java
+    queryParam:
+      packagePrefixPath: com.code.generate.beans.dto
+      classNameSuffix: QueryParam
+      diskPrefixPath: /Users/top1ms/IdeaProjects/generator/src/main/java/com/code/generate/beans/dto/
+      fileSuffix: .java
+    queryCondition:
+      packagePrefixPath: com.code.generate.beans.po
+      classNameSuffix: QueryCondition
+      diskPrefixPath: /Users/top1ms/IdeaProjects/generator/src/main/java/com/code/generate/beans/po/
+      fileSuffix: .java
+    dao:
+      packagePrefixPath: com.code.generate.dao
+      classNameSuffix: Dao
+      diskPrefixPath: /Users/top1ms/IdeaProjects/generator/src/main/java/com/code/generate/dao/
+      fileSuffix: .java
+    daoImpl:
+      packagePrefixPath: com.code.generate.dao.impl
+      classNameSuffix: DaoImpl
+      diskPrefixPath: /Users/top1ms/IdeaProjects/generator/src/main/java/com/code/generate/dao/impl/
+      fileSuffix: .java
+    mapper:
+      packagePrefixPath: xxx
+      classNameSuffix: Mapper
+      diskPrefixPath: /Users/top1ms/IdeaProjects/generator/src/main/resources/mapper/
+      fileSuffix: .xml
+    service:
+      packagePrefixPath: com.code.generate.services
+      classNameSuffix: Service
+      diskPrefixPath: /Users/top1ms/IdeaProjects/generator/src/main/java/com/code/generate/services/
+      fileSuffix: .java
+    serviceImpl:
+      packagePrefixPath: com.code.generate.services.impl
+      classNameSuffix: ServiceImpl
+      diskPrefixPath: /Users/top1ms/IdeaProjects/generator/src/main/java/com/code/generate/services/impl/
+      fileSuffix: .java
+    facedManager:
+      packagePrefixPath: com.code.generate.faced
+      classNameSuffix: FacedManager
+      diskPrefixPath: /Users/top1ms/IdeaProjects/generator/src/main/java/com/code/generate/faced/
+      fileSuffix: .java
+    facedManagerImpl:
+      packagePrefixPath: com.code.generate.faced.impl
+      classNameSuffix: FacedManagerImpl
+      diskPrefixPath: /Users/top1ms/IdeaProjects/generator/src/main/java/com/code/generate/faced/impl/
+      fileSuffix: .java
+    facedManagerTest:
+      packagePrefixPath: com.code.generate.faced
+      classNameSuffix: FacedManagerTest
+      diskPrefixPath: /Users/top1ms/IdeaProjects/generator/src/test/java/com/code/generate/faced/
+      fileSuffix: .java
+    basePageQuery:
+      packagePrefixPath: com.code.generate.beans
+      classNameSuffix:
+      diskPrefixPath: /Users/top1ms/IdeaProjects/generator/src/main/java/com/code/generate/beans/
+      fileSuffix: .java
+    pageQueryResult:
+      packagePrefixPath: com.code.generate.beans
+      classNameSuffix:
+      diskPrefixPath: /Users/top1ms/IdeaProjects/generator/src/main/java/com/code/generate/beans/
+      fileSuffix: .java
+    pageUtils:
+      packagePrefixPath: com.code.generate.utils

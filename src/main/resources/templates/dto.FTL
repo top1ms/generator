@@ -1,4 +1,4 @@
-package ${packagePrefix};
+package ${dtoPackagePrefixPath};
 
 
 import lombok.Data;
@@ -11,7 +11,7 @@ import java.util.Date;
  * @desc : ${desc} DTO
  */
 @Data
-public class ${javaFileName} implements Serializable {
+public class ${dtoName} implements Serializable {
 
 
 

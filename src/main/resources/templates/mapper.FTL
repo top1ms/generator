@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="${mapperXmlName}">
+<mapper namespace="${mapperName}">
 
 
-
-     <resultMap id="BaseResultMap" type="${durationSourcePath}">
+     <resultMap id="BaseResultMap" type="${doPackagePath}">
       <#if tableDescribes?exists>
         <#list tableDescribes as tableDescribe>
             <#if tableDescribe.primaryKey == true>
             <id column="${tableDescribe.originColumnName}" jdbcType="${tableDescribe.type}" property="${tableDescribe.underLineColumnName}"/>
             <#else>
+            <#if tableDescribe.needString == true>
+            <result column="${tableDescribe.originColumnName}"   jdbcType="VARCHAR" property="${tableDescribe.underLineColumnName}"/>
+            <#else>
             <result column="${tableDescribe.originColumnName}"   jdbcType="${tableDescribe.type}" property="${tableDescribe.underLineColumnName}"/>
+            </#if>
             </#if>
         </#list>
       </#if>
@@ -27,7 +30,7 @@
 
 
      <insert id="insert"
-             parameterType="${durationSourcePath}"
+             parameterType="${doPackagePath}"
              useGeneratedKeys="true"
              keyProperty="id">
           INSERT INTO ${tableName}
@@ -48,7 +51,7 @@
      </insert>
 
 
-     <update id="updateByPrimary" parameterType="${durationSourcePath}">
+     <update id="updateByPrimaryKey" parameterType="${doPackagePath}">
          UPDATE ${tableName}
          <set>
              <#if tableDescribes?exists>
@@ -68,8 +71,8 @@
          </#if>
      </update>
 
-     <select id="queryByCondition"
-             parameterType="${queryByConditionPath}"
+     <select id="queryByParam"
+             parameterType="${queryParamPackagePath}"
              resultMap="BaseResultMap">
          select
          <include refid="Base_Column_List"/>
@@ -85,9 +88,47 @@
           </#if>
          </where>
          ORDER BY gmt_modify DESC
-         <if test="startRow == null and offSet == null">
-             LIMIT 200
+         <if test="startRow != null and offSet != null">
+         LIMIT <#noparse>#{</#noparse>startRow<#noparse>}</#noparse>,<#noparse>#{</#noparse>offSet<#noparse>}</#noparse>
          </if>
      </select>
+
+     <select id="queryExactlyOneByParam"
+                 parameterType="${queryParamPackagePath}"
+                 resultMap="BaseResultMap">
+         select
+         <include refid="Base_Column_List"/>
+         from
+         ${tableName}
+         <where>
+          <#if tableDescribes?exists>
+           <#list tableDescribes as tableDescribe>
+             <if test="${tableDescribe.underLineColumnName} !=null">
+               and ${tableDescribe.originColumnName} = <#noparse>#{</#noparse>${tableDescribe.underLineColumnName}<#noparse>}</#noparse>
+             </if>
+           </#list>
+          </#if>
+         </where>
+         ORDER BY gmt_modify DESC
+         LIMIT 1
+      </select>
+
+     <select id="count"
+             parameterType="${queryParamPackagePath}"
+             resultType="INTEGER">
+          select
+          count(*)
+          from
+          ${tableName}
+          <where>
+           <#if tableDescribes?exists>
+            <#list tableDescribes as tableDescribe>
+              <if test="${tableDescribe.underLineColumnName} !=null">
+                and ${tableDescribe.originColumnName} = <#noparse>#{</#noparse>${tableDescribe.underLineColumnName}<#noparse>}</#noparse>
+              </if>
+            </#list>
+           </#if>
+          </where>
+      </select>
 
 </mapper>

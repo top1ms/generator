@@ -1,17 +1,20 @@
 package com.code.generate.utils;
 
-import com.alibaba.fastjson.JSONObject;
-import com.code.generate.dataSource.TableDescribe;
-import com.code.generate.dataSource.TableDescribeConstants;
-import lombok.SneakyThrows;
-import org.apache.commons.collections4.CollectionUtils;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import com.code.generate.template.TypeConvert;
+import org.apache.commons.collections4.CollectionUtils;
+
+import com.alibaba.fastjson.JSONObject;
+import com.code.generate.dataSource.TableDescribe;
+import com.code.generate.dataSource.TableDescribeConstants;
+
+import lombok.SneakyThrows;
 
 /**
  * @author : zms
@@ -20,18 +23,21 @@ import java.util.stream.Collectors;
  */
 public abstract class DataSourceUtils {
 
+    private final static String DRIVER   = "com.mysql.cj.jdbc.Driver";
 
-    private final static String DRIVER = "com.mysql.cj.jdbc.Driver";
+    private final static String URL      = "jdbc:mysql://localhost:3306/warehouse?characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull";
 
-
-    private final static String URL = "jdbc:mysql://localhost:3306/warehouse";
-
-    private final static String USER = "root";
+    private final static String USER     = "root";
 
     private final static String PASSWORD = "123456";
 
-//    public final static Connection connection = null;
+    //    public final static Connection connection = null;
 
+    private final static String UNSIGNED = "UNSIGNED";
+
+    private final static String INT      = "INT";
+
+    private final static String INTEGER  = "INTEGER";
 
     /**
      * @author : zms
@@ -47,7 +53,6 @@ public abstract class DataSourceUtils {
         }
         throw new RuntimeException("obtain dataSource error");
     }
-
 
     /**
      * @author : zms
@@ -73,13 +78,9 @@ public abstract class DataSourceUtils {
         if (CollectionUtils.isEmpty(tableNameList)) {
             return Collections.emptyList();
         }
-        return tableNameList
-                    .stream()
-                    .map(DataSourceUtils::getResultSetByTableName)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+        return tableNameList.stream().map(DataSourceUtils::getResultSetByTableName).filter(Objects::nonNull)
+            .collect(Collectors.toList());
     }
-
 
     /**
      * @author : zms
@@ -109,6 +110,10 @@ public abstract class DataSourceUtils {
             String originColumnName = resultSet.getString(TableDescribeConstants.COLUMN_NAME);
             String underLineColumnName = StringFormatUtils.replaceUnderLine(originColumnName);
             String type = resultSet.getString(TableDescribeConstants.TYPE);
+            type = type.replace(UNSIGNED, "").trim();
+            if (INT.equals(type)) {
+                type = INTEGER;
+            }
             String remakes = resultSet.getString(TableDescribeConstants.REMARKS);
 
             TableDescribe tableDescribe = new TableDescribe();
@@ -119,17 +124,14 @@ public abstract class DataSourceUtils {
             tableDescribe.setRemakes(remakes);
             tableDescribe.setPrimaryKey("id".equals(underLineColumnName));
 
+            tableDescribe.setNeedString(TypeConvert.strSet.contains(type));
+            tableDescribe.setNeedInteger(TypeConvert.integerSet.contains(type));
+            tableDescribe.setNeedLong(TypeConvert.longSet.contains(type));
+            tableDescribe.setNeedDate(TypeConvert.dateSet.contains(type));
+
             tableDescribes.add(tableDescribe);
         }
         return tableDescribes;
     }
 
-
-    public static void main(String[] args) throws SQLException {
-        List<TableDescribe> tableDescribes = fillTableDescribe("user_info");
-        System.out.println(JSONObject.toJSON(tableDescribes));
-
-        System.out.println(StringFormatUtils.replaceUnderLine("id"));
-
-    }
 }
